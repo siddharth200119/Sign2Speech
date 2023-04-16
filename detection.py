@@ -28,6 +28,16 @@ def angle_extraction(points):
 
 def video_detection(location):
     cap = cv2.VideoCapture(location)
+    result = {
+        "pose_points": [],
+        "face_points": [],
+        "lh_points": [],
+        "rh_points": [],
+        "pose_angles": [],
+        "face_angles": [],
+        "lh_angles": [],
+        "rh_angles": []
+    }
     with mp_holistic.Holistic(min_detection_confidence = 0.5, min_tracking_confidence = 0.5) as holistic:
         while cap.isOpened():
             ret, frame = cap.read()
@@ -40,9 +50,18 @@ def video_detection(location):
             lh = np.array([[res.x, res.y, res.z] for res in points.left_hand_landmarks.landmark]) if points.left_hand_landmarks else np.zeros((21,3))
             rh = np.array([[res.x, res.y, res.z] for res in points.right_hand_landmarks.landmark]) if points.right_hand_landmarks else np.zeros((21,3))
 
-            result = np.concatenate([pose, face, lh, rh])
+            result["pose_points"].append(pose)
+            result["face_points"].append(face)
+            result["lh_points"].append(lh)
+            result["rh_points"].append(rh)
+
+            result["pose_angles"].append(angle_extraction(pose))
+            result["face_angles"].append(angle_extraction(face))
+            result["lh_angles"].append(angle_extraction(lh))            
+            result["rh_angles"].append(angle_extraction(rh))
+            
         cap.release()
         cv2.destroyAllWindows()
-        return angle_extraction(rh)
+        return result
 
-print(video_detection("vod.MP4"))
+print(video_detection("vod.MP4")["pose_points"])
