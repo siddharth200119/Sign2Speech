@@ -3,8 +3,7 @@ import os
 from os import listdir
 import mediapipe as mp
 import numpy as np
-
-#to detect points
+import math
 
 mp_holistic = mp.solutions.holistic 
 
@@ -14,6 +13,19 @@ def detection(image, model):
     points = model.process(image)
     return points
 
+def angle_extraction(points):
+    angles = []
+    for point in range(len(points) - 2):
+        v1 = points[point] - points[point + 1]
+        v2 = points[point + 2] - points[point + 1]
+        cosine_angle = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+        angle = np.degrees(np.arccos(cosine_angle))
+        if(math.isnan(angle)):
+            angles.append(0)
+        else:
+            angles.append(angle)
+    return np.array(angles)
+
 def video_detection(location):
     cap = cv2.VideoCapture(location)
     with mp_holistic.Holistic(min_detection_confidence = 0.5, min_tracking_confidence = 0.5) as holistic:
@@ -22,11 +34,15 @@ def video_detection(location):
             if not ret:
                 break
             points = detection(frame, holistic)
-            pose = np.array([[res.x, res.y, res.z, res.visibility] for res in points.pose_landmarks.landmark]).flatten() if points.pose_landmarks else np.zeros(33*4)
-            face = np.array([[res.x, res.y, res.z] for res in points.face_landmarks.landmark]).flatten() if points.face_landmarks else np.zeros(468*3)
-            lh = np.array([[res.x, res.y, res.z] for res in points.left_hand_landmarks.landmark]).flatten() if points.left_hand_landmarks else np.zeros(21*3)
-            rh = np.array([[res.x, res.y, res.z] for res in points.right_hand_landmarks.landmark]).flatten() if points.right_hand_landmarks else np.zeros(21*3)
+
+            pose = np.array([[res.x, res.y, res.z] for res in points.pose_landmarks.landmark]) if points.pose_landmarks else np.zeros((33,3))
+            face = np.array([[res.x, res.y, res.z] for res in points.face_landmarks.landmark]) if points.face_landmarks else np.zeros((468,3))
+            lh = np.array([[res.x, res.y, res.z] for res in points.left_hand_landmarks.landmark]) if points.left_hand_landmarks else np.zeros((21,3))
+            rh = np.array([[res.x, res.y, res.z] for res in points.right_hand_landmarks.landmark]) if points.right_hand_landmarks else np.zeros((21,3))
+
             result = np.concatenate([pose, face, lh, rh])
         cap.release()
         cv2.destroyAllWindows()
-        return result
+        return angle_extraction(rh)
+
+print(video_detection("vod.MP4"))
