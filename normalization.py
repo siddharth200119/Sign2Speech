@@ -37,7 +37,7 @@ while True:
     if(frame_index % 3 == 0):
         cv2.imwrite(frame_filename, resized_frame)  # Save the frame as an image file
         print(f"Saved frame {frame_index} as {frame_filename}")
-    frame_index += 3
+    frame_index += 1
 
     # Exit the loop if 'q' key is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
