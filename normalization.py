@@ -33,7 +33,6 @@ def extract_frames(source_path, fps, resolution):
         resized_frame = cv2.resize(frame, (0, 0), fx=resolution, fy=resolution)
         if(frame_index % (int(cap.get(cv2.CAP_PROP_FPS)) // fps) == 0):
             frames.append(resized_frame)  # Append the frame to the list
-            print(f"Extracted frame {frame_index}")
         frame_index += 1
 
         # Exit the loop if 'q' key is pressed
@@ -53,7 +52,7 @@ def extract_frames(source_path, fps, resolution):
 # resolution = float(input("Enter desired resolution for extracted frames (e.g., 0.5 for half resolution): "))
 
 # Call the function with user inputs
-frames = extract_frames("C:\\Users\\JAY\Downloads\\are you free today (2).mp4", 10, 0.5)
+frames = extract_frames("vod.MP4", 10, 0.5)
 print(frames)
 
 # Do something with the frames (e.g., display, save, etc.)
