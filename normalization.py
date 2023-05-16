@@ -1,5 +1,6 @@
 import cv2
 import os
+import shutil
 
 def extract_frames(source_path, fps, resolution):
     # Load video
@@ -46,13 +47,21 @@ def extract_frames(source_path, fps, resolution):
     # Return the list of frames
     return frames
 
-# User inputs
-# source_path = input("Enter source path of video file: ")
-# fps = int(input("Enter desired FPS for extracted frames: "))
-# resolution = float(input("Enter desired resolution for extracted frames (e.g., 0.5 for half resolution): "))
 
-# Call the function with user inputs
-frames = extract_frames("vod.MP4", 10, 0.5)
-print(frames)
+def save_frames(source_path, fps, resolution, dest_path):
+    frames = extract_frames(source_path, fps, resolution)
+    os.mkdir(dest_path)
+    for i, frame in enumerate(frames):
+        cv2.imwrite(os.path.join(dest_path , "frame%d.jpg" % (i + 1)), frame)
+
+def del_frames(path):
+    try:
+        shutil.rmtree(path)
+    except OSError as e:
+        print(e)
+
+
+del_frames("temp")
+save_frames("vod.MP4", 10, 0.5, "temp")
 
 # Do something with the frames (e.g., display, save, etc.)
