@@ -4,7 +4,6 @@ from os import listdir
 import mediapipe as mp
 import numpy as np
 import math
-import normalization
 
 mp_holistic = mp.solutions.holistic 
 
@@ -129,6 +128,3 @@ def returned_frames_detection(frames):
             result["rh_angles"].append(angle_extraction(rh))
 
     return result
-
-print(video_detection("vod.MP4"))
-print(frame_detection("frame.jpg"))
