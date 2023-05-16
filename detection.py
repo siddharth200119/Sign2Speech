@@ -4,6 +4,7 @@ from os import listdir
 import mediapipe as mp
 import numpy as np
 import math
+import normalization
 
 mp_holistic = mp.solutions.holistic 
 
@@ -97,6 +98,37 @@ def frame_detection(location):
     cv2.destroyAllWindows()
     return result
 
+def returned_frames_detection(frames):
+    result = {
+        "pose_points": [],
+        "face_points": [],
+        "lh_points": [],
+        "rh_points": [],
+        "pose_angles": [],
+        "face_angles": [],
+        "lh_angles": [],
+        "rh_angles": []
+    }
+    with mp_holistic.Holistic(min_detection_confidence = 0.5, min_tracking_confidence = 0.5) as holistic:
+        for frame in frames:
+            points = detection(frame, holistic)
 
-#print(video_detection("vod.MP4")["pose_points"])
-#print(frame_detection("frame.jpg"))
+            pose = np.array([[res.x, res.y, res.z] for res in points.pose_landmarks.landmark]) if points.pose_landmarks else np.zeros((33,3))
+            face = np.array([[res.x, res.y, res.z] for res in points.face_landmarks.landmark]) if points.face_landmarks else np.zeros((468,3))
+            lh = np.array([[res.x, res.y, res.z] for res in points.left_hand_landmarks.landmark]) if points.left_hand_landmarks else np.zeros((21,3))
+            rh = np.array([[res.x, res.y, res.z] for res in points.right_hand_landmarks.landmark]) if points.right_hand_landmarks else np.zeros((21,3))
+
+            result["pose_points"].append(pose)
+            result["face_points"].append(face)
+            result["lh_points"].append(lh)
+            result["rh_points"].append(rh)
+
+            result["pose_angles"].append(angle_extraction(pose))
+            result["face_angles"].append(angle_extraction(face))
+            result["lh_angles"].append(angle_extraction(lh))            
+            result["rh_angles"].append(angle_extraction(rh))
+
+    return result
+
+print(video_detection("vod.MP4"))
+print(frame_detection("frame.jpg"))
