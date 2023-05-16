@@ -60,8 +60,4 @@ def del_frames(path):
     except OSError as e:
         print(e)
 
-
-del_frames("temp")
-save_frames("vod.MP4", 10, 0.5, "temp")
-
 # Do something with the frames (e.g., display, save, etc.)
