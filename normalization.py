@@ -13,8 +13,6 @@ def extract_frames(source_path, fps, resolution):
 
     # Get total number of frames in the video
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    print("FPS:", fps)
-    print("Total frames:", total_frames)
 
     # Create an empty list to store frames
     frames = []
