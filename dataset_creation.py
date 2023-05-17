@@ -21,8 +21,8 @@ def create_entry(path, entry_name, fps, scale):
             header_written = True
         writer.writerows([results])
 
-fps = input("enter fps: ")
-scale = input("enter scale: ")
+fps = float(input("enter fps: "))
+scale = float(input("enter scale: "))
 
 
 for root, dirs, files in os.walk("Dataset\\"):
