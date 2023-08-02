@@ -1,5 +1,4 @@
 import cv2
-import os
 from os import listdir
 import mediapipe as mp
 import numpy as np

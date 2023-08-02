@@ -12,7 +12,7 @@ def create_entry(path, entry_name, fps, scale):
     results = detection.returned_frames_detection(frames)
     results["gesture"] = entry_name
     fields = ["gesture", "pose_points", "face_points", "lh_points", "rh_points", "pose_angles", "face_angles", "lh_angles", "rh_angles"]
-    output_file = "output" + "fps" + str(fps) + "scale" + str(scale) + ".csv"
+    output_file = "Dataset_csv\\" + entry_name + "output" + "fps" + str(fps) + "scale" + str(scale) + ".csv"
     global header_written
     with open(output_file, 'a', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames = fields)
