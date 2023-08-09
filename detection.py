@@ -96,6 +96,8 @@ def frame_detection(location):
     cv2.destroyAllWindows()
     return result
 
+#for whole video
+
 def returned_frames_detection(frames):
     result = {
         "pose_points": [],

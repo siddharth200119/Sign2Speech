@@ -2,3 +2,6 @@ Dataset/
 __pycache__/
 *.py[cod]
 *.csv
+Dataset_csv/
+Dataset_test/
+*.npy
